@@ -27,5 +27,6 @@
   { "id": 26, "name": "Loki", "image": "assets/characters/op/loki.png", "height": 6700 },
   { "id": 27, "name": "Wadatsumi", "image": "assets/characters/op/wadatsumi.png", "height": 8000 },
   { "id": 28, "name": "Sanjuan Wolf", "image": "assets/characters/op/sanjuan-wolf.png", "height": 18000 },
-  { "id": 29, "name": "Loki (Nidhogg - Full Form)", "image": "assets/characters/op/loki-nidhogg.png", "height": 100000 }
+  { "id": 29, "name": "Loki (Nidhogg - Full Form)", "image": "assets/characters/op/loki-nidhogg.png", "height": 100000 },
+  { "id": 30, "name": "Zunesha", "image": "assets/characters/op/zunesha.png", "height": 200000 }
 ]
