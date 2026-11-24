@@ -1,0 +1,222 @@
+Développement d'un mini-jeu web – AniMeter
+1. Présentation du projet
+Je souhaite développer un petit jeu web interactif en HTML, CSS et JavaScript, dans lequel le joueur doit estimer la taille réelle de différents personnages issus d'animes et de mangas.
+Le principe est simple : plusieurs personnages apparaissent côte à côte sur une grande règle graduée. Le joueur doit modifier leur taille visuelle pour essayer de reproduire leur véritable taille.
+Une fois satisfait de son estimation, il peut valider chaque personnage pour découvrir sa véritable taille et comparer son estimation avec la bonne réponse.
+Je veux un résultat soigné, moderne, agréable à utiliser et amusant. Ce n'est pas un gros jeu, mais je veux une réalisation de qualité, avec une interface cohérente et des interactions fluides.
+Le projet sera sur github pages, et pouvoir etre ouvert sur VSCode
+
+2. Technologies et architecture
+Utiliser exclusivement :
+HTML5
+CSS3
+JavaScript vanilla (sans framework inutile).
+Le projet doit être entièrement fonctionnel localement, sans serveur ni backend.
+Organiser proprement les fichiers :
+docs/
+│
+├── index.html
+├── css/
+│   └── style.css
+├── js/
+│   ├── main.js
+│   ├── game.js
+│   ├── ruler.js
+│   └── characters.js
+│
+├── data/
+│   └── characters.json
+│
+└── assets/
+    └── characters/
+Le code doit être propre, modulaire, commenté lorsque nécessaire et facile à faire évoluer.
+Important : prévoir une méthode compatible avec l'utilisation du JSON. 
+
+3. Gestion des personnages avec JSON
+Je veux pouvoir ajouter, modifier et supprimer moi-même des personnages sans avoir à toucher au code JavaScript.
+Toutes les données des personnages doivent être centralisées dans :
+data/characters.json
+Chaque personnage doit posséder :
+id : identifiant unique.
+name : nom du personnage.
+image : chemin vers son image.
+height : taille réelle en centimètres.
+Exemple de structure :
+[
+  {
+    "id": 1,
+    "name": "Monkey D. Luffy",
+    "image": "assets/characters/luffy.png",
+    "height": 174
+  },
+  {
+    "id": 2,
+    "name": "Roronoa Zoro",
+    "image": "assets/characters/zoro.png",
+    "height": 181
+  },
+  {
+    "id": 3,
+    "name": "Naruto Uzumaki",
+    "image": "assets/characters/naruto.png",
+    "height": 180
+  },
+  {
+    "id": 4,
+    "name": "Levi Ackerman",
+    "image": "assets/characters/levi.png",
+    "height": 160
+  },
+  {
+    "id": 5,
+    "name": "Satoru Gojo",
+    "image": "assets/characters/gojo.png",
+    "height": 190
+  }
+]
+Les personnages ci-dessus sont uniquement des exemples de démonstration.
+Prévoir une gestion robuste des images :
+Conserver les proportions originales.
+Ne jamais déformer les personnages.
+Afficher un placeholder propre si une image est introuvable.
+Utiliser idéalement des images PNG avec fond transparent.
+
+4. Écran d'accueil (Hub)
+Créer un écran d'accueil minimaliste et élégant.
+Au centre de l'écran :
+Un titre : Anime Height Challenge.
+Une petite phrase expliquant le concept.
+Un grand bouton central « LANCER LE JEU ».
+Éventuellement un petit indicateur du nombre de personnages disponibles.
+Le bouton doit avoir une animation discrète au survol et lancer la partie.
+Je veux un écran accueillant, avec une véritable identité visuelle, pas une simple page HTML basique.
+
+5. Interface principale du jeu
+Après avoir cliqué sur « Lancer le jeu », afficher une grande zone de jeu occupant l'essentiel de l'écran.
+La règle graduée
+C'est l'élément central du jeu.
+Créer une grande grille verticale de mesure représentant les tailles humaines.
+Elle doit comporter :
+Une graduation principale tous les mètres : 1 m, 2 m, 3 m, 4 m, etc.
+Des traits horizontaux continus pour les mètres.
+Des sous-graduations en pointillés pour les mesures intermédiaires.
+Des repères secondaires plus petits pour faciliter l'estimation.
+Une ligne de sol à 0 m.
+La règle doit être suffisamment grande pour permettre de comparer des personnages de tailles différentes.
+Les graduations doivent rester parfaitement alignées et proportionnelles, quelle que soit l'échelle de zoom.
+Zoom et déplacement
+La zone de jeu doit être navigable librement.
+Ajouter :
+Zoom avant.
+Zoom arrière.
+Déplacement horizontal et vertical de la vue.
+Zoom avec la molette de la souris.
+Déplacement par glisser-déposer de la zone vide.
+Bouton pour recentrer la vue.
+Bouton pour réinitialiser le zoom.
+Le zoom doit être fluide et conserver une bonne lisibilité des graduations.
+
+6. Apparition et disposition des personnages
+Lorsque la partie commence, tous les personnages disponibles dans le JSON doivent être générés automatiquement.
+Disposition initiale :
+Tous les personnages sont alignés côte à côte.
+Tous commencent avec une hauteur estimée de 2 mètres.
+Leurs pieds sont parfaitement alignés sur la ligne de sol.
+Chaque personnage possède son propre espace.
+Leur taille initiale est identique, indépendamment de leur véritable taille.
+Les images doivent conserver leurs proportions originales.
+Sous chaque personnage, afficher :
+Son nom.
+Un contrôle de validation.
+Éventuellement sa hauteur estimée en temps réel.
+Attention : ne jamais afficher la véritable taille avant validation.
+
+7. Manipulation des personnages
+C'est une mécanique essentielle du jeu.
+Le joueur doit pouvoir manipuler individuellement chaque personnage.
+Redimensionnement
+Permettre de modifier la hauteur de chaque personnage :
+Agrandir.
+Rétrécir.
+Ajuster précisément sa taille.
+Utiliser la molette ou des contrôles dédiés pour affiner le réglage.
+Le redimensionnement doit être proportionnel : largeur et hauteur évoluent ensemble.
+Les pieds du personnage doivent toujours rester fixés sur la ligne de sol lorsqu'on modifie sa taille.
+Déplacement
+Permettre de déplacer librement les personnages horizontalement.
+Ajouter un système de snapping (aimantation) :
+Les personnages doivent s'aligner proprement.
+Éviter qu'ils se superposent.
+Prévoir un espacement minimal entre les personnages.
+Afficher éventuellement un indicateur visuel lors de l'alignement.
+Rendre le déplacement intuitif avec la souris.
+Chaque personnage doit être manipulable indépendamment des autres.
+Attention à bien distinguer le déplacement d'un personnage du déplacement de la caméra.
+
+8. Validation et révélation de la véritable taille
+Sous chaque personnage, ajouter un bouton « VALIDER ».
+Lorsque le joueur valide un personnage :
+Bloquer les manipulations de ce personnage.
+Afficher sa véritable taille en centimètres et en mètres.
+Calculer l'écart entre l'estimation du joueur et la taille réelle.
+Afficher une silhouette noire représentant sa véritable taille.
+Positionner cette silhouette exactement sur la même ligne de sol que le personnage.
+Permettre de comparer immédiatement les deux hauteurs.
+Silhouette de comparaison
+La véritable taille doit être représentée par une silhouette entièrement noire, placée derrière le personnage original.
+Cette silhouette doit :
+Avoir exactement la même image et les mêmes proportions que le personnage.
+Être complètement noire (sans détails ni couleurs).
+Correspondre à la véritable hauteur.
+Avoir les pieds parfaitement alignés avec ceux du personnage.
+Rester visible derrière l'image originale.
+Le personnage original doit rester visible devant cette silhouette afin que le joueur puisse constater la différence de taille.
+La révélation doit être accompagnée d'une animation douce et agréable.
+Résultat de l'estimation
+Afficher clairement l'écart entre l'estimation et la véritable taille.
+Exemple :
+Estimation : 175 cm
+Taille réelle : 181 cm
+Écart : 6 cm
+Ajouter un retour visuel selon la précision de l'estimation, avec un système de couleurs ou de petites appréciations.
+
+9. Direction artistique et ergonomie
+Je veux une interface moderne, minimaliste et élégante.
+Éviter :
+Les interfaces génériques générées automatiquement.
+Les boutons trop imposants partout.
+Les couleurs criardes.
+Les éléments décoratifs inutiles.
+Les interfaces qui ressemblent à un tableau de bord professionnel.
+Privilégier :
+Une typographie moderne et lisible.
+Une palette de couleurs cohérente.
+Des espaces bien équilibrés.
+Des animations discrètes.
+Des transitions fluides.
+Des boutons avec des états visuels clairs.
+Une hiérarchie visuelle évidente.
+L'interface doit être ergonomique et intuitive, même pour quelqu'un qui découvre le jeu.
+Prévoir également une adaptation aux différentes tailles d'écran, avec une priorité donnée à l'expérience sur ordinateur.
+
+10. Fonctionnalités et qualité technique
+Quelques exigences supplémentaires :
+Prévoir un nombre variable de personnages.
+Ne pas coder les personnages individuellement en dur dans le JavaScript.
+Toutes les tailles doivent être gérées dans une véritable unité de mesure interne (centimètres ou mètres).
+La règle et les personnages doivent utiliser exactement la même échelle.
+Le zoom ne doit jamais modifier les proportions relatives.
+Les personnages validés doivent rester verrouillés.
+Prévoir une gestion des erreurs de chargement des images et des données.
+Éviter les bugs de manipulation lorsque plusieurs personnages sont proches.
+Éviter les conflits entre les interactions de la souris et le déplacement de la caméra.
+Le code doit être suffisamment propre pour pouvoir ajouter facilement de nouvelles fonctionnalités plus tard.
+
+11. Objectif final
+Je veux obtenir un mini-jeu complet, agréable et immédiatement compréhensible.
+Le joueur arrive sur un joli hub, lance une partie, découvre tous les personnages alignés à 2 mètres sur une règle graduée, puis doit ajuster individuellement leur hauteur jusqu'à obtenir une estimation qui lui semble correcte.
+Il valide chaque personnage et découvre sa taille réelle grâce à la silhouette noire de comparaison.
+La priorité absolue est la qualité de l'expérience de jeu : une règle précise, un redimensionnement intuitif, un snapping efficace, une comparaison visuelle parfaitement proportionnelle et une interface soignée.
+Ne te contente pas de créer une maquette visuelle : développe un jeu réellement fonctionnel, avec toutes les interactions demandées.
+Avant de terminer, teste les différentes interactions, corrige les bugs et vérifie que les proportions des personnages correspondent réellement aux graduations de la règle.
+

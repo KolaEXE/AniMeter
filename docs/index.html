@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10151f">
+  <title>//AniMeter</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main id="app">
+    <section id="hub" class="hub" aria-labelledby="game-title">
+      <div class="hub-content">
+        <p class="eyebrow">///</p>
+        <h1 id="game-title">Anime Meter<br><span>Challenge</span></h1>
+        <p class="subtitle">Estime la taille de personnages de mangas et animes, puis compare-les sur une echelle commune.</p>
+        <button id="start-button" class="primary-button" type="button">
+          <span>Lancer le jeu</span>
+          <span class="button-arrow" aria-hidden="true">▶</span>
+        </button>
+        <p id="character-count" class="character-count">Chargement des personnages...</p>
+      </div>
+    </section>
+
+    <section id="game" class="game" aria-label="Zone de jeu" hidden>
+      <header class="game-header">
+        <div class="brand">//AniMeter</div>
+        <div class="round-progress" aria-live="polite">
+          <span id="round-progress">1 / 1</span>
+        </div>
+        <div class="view-tools" aria-label="Outils de vue">
+          <button id="zoom-out" type="button" title="Zoom arriere" aria-label="Zoom arriere">−</button>
+          <span id="zoom-label">100%</span>
+          <button id="zoom-in" type="button" title="Zoom avant" aria-label="Zoom avant">+</button>
+          <button id="center-view" type="button" title="Recentrer la vue">Recentrer</button>
+          <button id="reset-view" type="button" title="Reinitialiser la vue">Reset</button>
+        </div>
+      </header>
+
+      <div id="stage" class="stage" title="Molette : zoomer. Maj + molette sur un personnage : ajuster sa taille.">
+        <div id="ruler" class="ruler" aria-label="Regle graduée"></div>
+        <div id="world" class="world">
+          <div id="characters-layer" class="characters-layer"></div>
+        </div>
+        <div id="ruler-labels" class="ruler-label-layer" aria-hidden="true"></div>
+        <div id="character-dock" class="character-dock" aria-label="Commandes des personnages"></div>
+        <button id="next-character" class="next-button" type="button" hidden>Suivant</button>
+        <div id="alignment-guide" class="alignment-guide" hidden></div>
+      </div>
+
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </section>
+  </main>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
