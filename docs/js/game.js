@@ -7,7 +7,6 @@ const CONTROL_WIDTH_PX = 340;
 const BASE_CHARACTER_HEIGHT_PX = 200;
 const MIN_ZOOM = 0.0001;
 const MAX_ZOOM = 22;
-const MAX_RENDERED_SCREEN_PX = 800;
 const UNIT_TO_CM = { cm: 1, m: 100, km: 100000 };
 const FALLBACK_CHARACTER_IMAGE = "assets/characters/char-default.png";
 const MAX_CAMERA_OFFSET_PX = 16000000;
@@ -213,27 +212,36 @@ export class AnimeHeightGame {
       if (event.target.closest(".character-controls")) return;
       event.preventDefault();
       this.cancelCameraAnimation();
-      state.dragging = true;
-      state.card.classList.add("dragging");
       const startX = event.clientX;
+      const startY = event.clientY;
       const startWorldX = state.x;
       state.card.setPointerCapture(event.pointerId);
 
       const move = (moveEvent) => {
+        if (!state.dragging) {
+          if (Math.hypot(moveEvent.clientX - startX, moveEvent.clientY - startY) < 5) return;
+          state.dragging = true;
+          state.card.classList.add("dragging");
+        }
         const nextX = startWorldX + (moveEvent.clientX - startX) / this.zoom;
         const maxX = Math.max(40, MAX_CAMERA_OFFSET_PX - state.widthPx);
         state.x = Math.min(maxX, Math.max(40, nextX));
         this.updateCard(state);
         this.showAlignmentGuide(state);
       };
-      const end = () => {
+      const end = (endEvent) => {
+        const wasDragging = state.dragging;
         state.dragging = false;
         state.card.classList.remove("dragging");
         this.hideAlignmentGuide();
         state.card.removeEventListener("pointermove", move);
         state.card.removeEventListener("pointerup", end);
         state.card.removeEventListener("pointercancel", end);
-        this.finishCardDrag(state);
+        if (wasDragging) {
+          this.finishCardDrag(state);
+        } else if (endEvent.type === "pointerup") {
+          this.scrollControlsIntoView(state);
+        }
       };
       state.card.addEventListener("pointermove", move);
       state.card.addEventListener("pointerup", end);
@@ -321,17 +329,7 @@ export class AnimeHeightGame {
   }
 
   maxZoom() {
-    let extent = 5000;
-    let tallestCharacter = 1;
-    for (const state of this.cards) {
-      extent = Math.max(extent, state.x + state.widthPx, state.heightPx);
-      tallestCharacter = Math.max(tallestCharacter, state.heightPx);
-    }
-    return Math.max(MIN_ZOOM, Math.min(
-      MAX_ZOOM,
-      MAX_CAMERA_OFFSET_PX / extent,
-      MAX_RENDERED_SCREEN_PX / tallestCharacter
-    ));
+    return MAX_ZOOM;
   }
 
   layoutCards() {
@@ -364,10 +362,10 @@ export class AnimeHeightGame {
     const insertionIndex = ordered.findIndex((card) => centerX < card.x + card.widthPx / 2);
     ordered.splice(insertionIndex < 0 ? ordered.length : insertionIndex, 0, state);
 
-    this.applyCardOrder(ordered);
+    this.applyCardOrder(ordered, false);
   }
 
-  applyCardOrder(ordered) {
+  applyCardOrder(ordered, reorderDock = true) {
     const beforeCards = this.captureRects(this.cards.map((card) => card.card));
     const beforeDock = this.captureRects(this.cards.map((card) => card.controls));
     let nextX = this.layoutOriginX;
@@ -376,7 +374,7 @@ export class AnimeHeightGame {
       nextX += card.widthPx + MIN_GAP_PX / this.initialZoom;
     }
     this.layoutCards();
-    this.reorderDock();
+    if (reorderDock) this.reorderDock();
     this.animatePositions(this.cards.map((card) => card.card), beforeCards, this.zoom);
     this.animatePositions(this.cards.map((card) => card.controls), beforeDock, 1);
   }
@@ -514,6 +512,15 @@ export class AnimeHeightGame {
 
   hideAlignmentGuide() {
     this.alignmentGuide.hidden = true;
+  }
+
+  scrollControlsIntoView(state) {
+    const dockRect = this.dock.getBoundingClientRect();
+    const controlsRect = state.controls.getBoundingClientRect();
+    const dockLeft = dockRect.left + this.dock.clientLeft;
+    const targetLeft = this.dock.scrollLeft + controlsRect.left - dockLeft
+      - (this.dock.clientWidth - controlsRect.width) / 2;
+    this.dock.scrollTo({ left: Math.max(0, targetLeft), behavior: "smooth" });
   }
 
   validateCard(state) {
